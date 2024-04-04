@@ -4,10 +4,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 function NavBar({ Info }) {
+  console.log('Info: ', Info);
   // console.log('Info: NavBar in auth', Info);
   const navigate = useNavigate();
   const [enableUser, setEnable] = useState(false);
   const [userData, setUserData] = useState({
+    id:Info?.user.id,
     name: Info?.user.name,
     email: Info?.user.email
   });
@@ -19,14 +21,15 @@ function NavBar({ Info }) {
   }
 
   const updateUser = async () => {
+    console.log(userData,"userData");
     try {
-      const response = await axios.patch( `http://192.168.1.108:3000/users/${Info?.id}`,userData, {
+      const response = await axios.patch( `http://192.168.1.108:3000/users/${userData?.id}`,userData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${Info?.token}`
         },
       });
-      if (response.ok) {
+      if (response.status==200) {
         toast.success("User information updated successfully");
       } else {
         toast.error("Failed to update user information");
